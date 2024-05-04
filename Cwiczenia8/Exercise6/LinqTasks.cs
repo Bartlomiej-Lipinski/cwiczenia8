@@ -269,7 +269,15 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<object> Task11()
         {
-            IEnumerable<object> result = Emps.GroupBy(emp => emp.Deptno).Where(group => group.Count() > 1).Select(group => new {name = group.Key, numOfEmployees = group.Count()});
+            // IEnumerable<object> result = Emps.GroupBy(emp => emp.Deptno).Where(group => group.Count() > 1).Select(group => new {name = group.Key, numOfEmployees = group.Count()});
+            IEnumerable<Object> result = Emps.GroupJoin(Depts,emp => emp.Deptno,dept => dept.Deptno,(emp,dept)=> new {Emp = emp,Dept = dept.FirstOrDefault() })
+                .GroupBy(x=>x.Dept?.Dname)
+                .Where(g => g.Count() > 1)
+                .Select(g => new
+                {
+                    name =g.Key,
+                    numOfEmployees =g.Count()
+                });
             return result;
         }
 
